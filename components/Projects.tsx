@@ -8,10 +8,10 @@ export function Projects() {
       <SectionHeader
         eyebrow="AI Systems"
         title="Not demos — case studies in problem, trade-off, and evaluation."
-        description="Each system below covers why AI was the right tool, what I built, how it was evaluated, and the trade-offs behind the design. Click a card to expand."
+        description="Each system below covers why AI was the right tool, what I built, how it was evaluated, and the trade-offs behind the design."
       />
 
-      <div className="mt-12 space-y-6">
+      <div className="mt-16">
         {projects.map((project, i) => (
           <ProjectCaseStudy key={project.slug} project={project} index={i} />
         ))}
