@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { ArrowRight, Linkedin, Mail, MapPin } from "lucide-react";
 import { profile, heroFacts } from "@/lib/data";
 import { MetricCard } from "./MetricCard";
 import { MagneticButton } from "./MagneticButton";
 import { ProfilePhoto } from "./ProfilePhoto";
+
+const HeroOrb = dynamic(() => import("./HeroOrb"), { ssr: false });
 
 const keywords = ["LLM applications", "RAG pipelines", "agentic workflows", "eval-driven AI systems"];
 
@@ -147,7 +150,8 @@ export function Hero() {
             </motion.div>
           </div>
 
-          <div className="order-1 lg:order-2">
+          <div className="relative order-1 lg:order-2">
+            <HeroOrb />
             <ProfilePhoto src={profile.photo} alt={profile.name} variant="hero" priority delay={0.15} />
           </div>
         </div>
