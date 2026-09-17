@@ -41,15 +41,12 @@ export function MetricCard({
   const animated = useCountUp(isNumeric ? numeric : 0, inView && isNumeric);
 
   return (
-    <div
-      ref={ref}
-      className="glass rounded-2xl px-5 py-4 transition-transform duration-300 hover:-translate-y-1"
-    >
-      <div className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+    <div ref={ref} className="min-w-0">
+      <div className="text-[1.9rem] font-semibold leading-none tracking-tight text-foreground sm:text-4xl">
         {isNumeric ? animated : value}
         <span className="text-gradient">{suffix}</span>
       </div>
-      <div className="mt-1 text-xs leading-snug text-foreground-muted">{label}</div>
+      <div className="mt-2.5 text-xs leading-snug text-foreground-muted">{label}</div>
     </div>
   );
 }

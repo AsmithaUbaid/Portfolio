@@ -8,8 +8,8 @@ import { profile } from "@/lib/data";
 const links = [
   { href: "#home", label: "Home" },
   { href: "#experience", label: "Experience" },
-  { href: "#projects", label: "Projects" },
-  { href: "#ai-systems", label: "AI Systems" },
+  { href: "#projects", label: "AI Systems" },
+  { href: "#decision-lab", label: "Decision Lab" },
   { href: "#about", label: "About" },
   { href: "#contact", label: "Contact" },
 ];

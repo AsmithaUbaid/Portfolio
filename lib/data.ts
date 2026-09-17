@@ -297,11 +297,20 @@ export const projects: Project[] = [
   },
 ];
 
+export type DecisionVisual =
+  | "agent-vs-workflow"
+  | "rag-toggle"
+  | "model-tradeoff"
+  | "seesaw"
+  | "gate"
+  | "checklist";
+
 export type DecisionCard = {
   id: string;
   question: string;
   shortAnswer: string;
   reasoning: string;
+  visual: DecisionVisual;
 };
 
 export const howIThink: DecisionCard[] = [
@@ -311,6 +320,7 @@ export const howIThink: DecisionCard[] = [
     shortAnswer: "Default to a deterministic workflow. Reach for an agent only when the path can't be fixed in advance.",
     reasoning:
       "In the expense-compliance pipeline, the steps were fixed and known — OCR, then retrieval, then reasoning, then a gated decision — so a deterministic workflow with explicit gates was the right shape. An agent earns its complexity when the next step genuinely depends on what the model discovers mid-task and can't be hard-coded. Autonomy should be scoped to where it's needed, not applied by default.",
+    visual: "agent-vs-workflow",
   },
   {
     id: "when-rag",
@@ -318,6 +328,7 @@ export const howIThink: DecisionCard[] = [
     shortAnswer: "When the ground truth changes or is too large to bake into the model — policy, contracts, live documents.",
     reasoning:
       "Company expense policy and NDA contract text both change over time and vary per customer — retrieval at inference time keeps the system aligned with current source documents instead of encoding stale rules into a prompt or fine-tune. If the knowledge is stable and small, RAG adds latency and failure surface for no benefit.",
+    visual: "rag-toggle",
   },
   {
     id: "model-selection",
@@ -325,6 +336,7 @@ export const howIThink: DecisionCard[] = [
     shortAnswer: "Evaluate on the same axes every time: accuracy, latency, and cost — as a trade-off, not a leaderboard.",
     reasoning:
       "Across both AI projects, evaluation was defined up front across accuracy, latency, and cost rather than picking the model with the single best accuracy number. A model that's 2% more accurate but 5x the latency and cost is rarely the right production choice — the decision depends on what the system can't tolerate.",
+    visual: "model-tradeoff",
   },
   {
     id: "cost-vs-accuracy",
@@ -332,6 +344,7 @@ export const howIThink: DecisionCard[] = [
     shortAnswer: "When the task runs at high volume with low per-decision risk — cost compounds, and marginal accuracy doesn't.",
     reasoning:
       "High-volume, low-risk classification steps benefit more from a cheaper, faster model paired with a good escalation path than from squeezing out marginal accuracy at high per-call cost. Cost becomes the binding constraint once volume is high enough that the accuracy gain doesn't outweigh what it costs to get it — especially when a human-review gate already catches the tail of hard cases.",
+    visual: "seesaw",
   },
   {
     id: "autonomy-control",
@@ -339,6 +352,7 @@ export const howIThink: DecisionCard[] = [
     shortAnswer: "Gate the decision, not just the output — confidence thresholds route to a human before anything risky auto-executes.",
     reasoning:
       "Both AI projects used the same pattern: a gated decision layer that gives the model room to act, but routes low-confidence or high-risk outcomes to a human reviewer instead of auto-committing. Autonomy is controlled by where the gate sits, not by limiting what the model is allowed to say.",
+    visual: "gate",
   },
   {
     id: "evaluation-before-deploy",
@@ -346,6 +360,7 @@ export const howIThink: DecisionCard[] = [
     shortAnswer: "Define the metrics before the system exists, and include failure modes — not just aggregate accuracy.",
     reasoning:
       "For the NDA review system, evaluation metrics (Macro-F1, risk recall, Retrieval Recall@K, latency, cost) were defined as part of the design, not bolted on afterward — including risk recall specifically because false negatives were more costly than false positives. An LLM application isn't ready to ship until its failure modes have been named and measured, not just its success rate.",
+    visual: "checklist",
   },
 ];
 

@@ -7,8 +7,10 @@ import { profile, heroFacts } from "@/lib/data";
 import { MetricCard } from "./MetricCard";
 import { MagneticButton } from "./MagneticButton";
 import { ProfilePhoto } from "./ProfilePhoto";
+import { NetworkBackground } from "./NetworkBackground";
 
 const keywords = ["LLM applications", "RAG pipelines", "agentic workflows", "eval-driven AI systems"];
+const roles = ["AI Engineer", "Applied AI", "Agentic Systems", "Production Engineering"];
 
 const headlineWords = profile.headline.split(" ");
 
@@ -42,14 +44,46 @@ function RotatingKeyword() {
   );
 }
 
+function RoleLine() {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+    const id = setInterval(() => setActive((i) => (i + 1) % roles.length), 2200);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-foreground-subtle">
+      {roles.map((role, i) => (
+        <span key={role} className="flex items-center gap-2">
+          <motion.span
+            animate={{
+              color: i === active ? "var(--accent-blue)" : "var(--foreground-subtle)",
+              scale: i === active ? 1.04 : 1,
+            }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="font-medium"
+          >
+            {role}
+          </motion.span>
+          {i < roles.length - 1 && <span aria-hidden>·</span>}
+        </span>
+      ))}
+    </p>
+  );
+}
+
 export function Hero() {
   return (
     <section
       id="home"
       className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden pt-28 pb-16"
     >
-      <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_80%_60%_at_50%_10%,#000_40%,transparent_100%)]" />
-      <div className="mesh-gradient absolute inset-0" aria-hidden />
+      <div className="absolute inset-0 bg-grid opacity-60 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_10%,#000_40%,transparent_100%)]" />
+      <NetworkBackground />
+      <div className="mesh-gradient absolute inset-0 opacity-50" aria-hidden />
 
       <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6">
         <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
@@ -68,14 +102,13 @@ export function Hero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.08 }}
-              className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1"
+              className="mt-5"
             >
               <span className="text-lg font-semibold text-foreground">{profile.name}</span>
-              <span className="h-1 w-1 rounded-full bg-foreground-subtle" aria-hidden />
-              <span className="text-sm text-foreground-muted">{profile.tagline}</span>
+              <RoleLine />
             </motion.div>
 
-            <h1 className="mt-4 max-w-4xl text-4xl font-semibold leading-[1.1] tracking-tight text-foreground sm:text-5xl md:text-6xl">
+            <h1 className="mt-5 max-w-4xl text-4xl font-semibold leading-[1.1] tracking-tight text-foreground sm:text-5xl md:text-6xl">
               {headlineWords.map((word, i) => (
                 <motion.span
                   key={i}
@@ -156,7 +189,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.85 }}
-          className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5"
+          className="mt-16 flex flex-wrap gap-x-8 gap-y-6 border-t border-surface-border pt-8 sm:gap-x-10"
         >
           {heroFacts.map((fact) => (
             <MetricCard key={fact.label} value={fact.value} suffix={fact.suffix} label={fact.label} />
