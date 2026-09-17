@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+:root {
+  --background: #08090c;
+  --background-elevated: #0e1015;
+  --surface: #111319;
+  --surface-border: rgba(255, 255, 255, 0.08);
+  --foreground: #f3f4f6;
+  --foreground-muted: #9aa0ac;
+  --foreground-subtle: #676d79;
+  --accent-blue: #5b8cff;
+  --accent-violet: #9b7bff;
+  --accent-cyan: #4ce0d2;
+  --grid-line: rgba(255, 255, 255, 0.05);
+  --focus-ring: #7ea2ff;
+}
+
+:root[data-theme="light"] {
+  --background: #fafafa;
+  --background-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-border: rgba(15, 17, 21, 0.08);
+  --foreground: #14161a;
+  --foreground-muted: #565c66;
+  --foreground-subtle: #8b909a;
+  --accent-blue: #3763e0;
+  --accent-violet: #7a54e0;
+  --accent-cyan: #0f9c8e;
+  --grid-line: rgba(15, 17, 21, 0.045);
+  --focus-ring: #3763e0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-elevated: var(--background-elevated);
+  --color-surface: var(--surface);
+  --color-surface-border: var(--surface-border);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-subtle: var(--foreground-subtle);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-violet: var(--accent-violet);
+  --color-accent-cyan: var(--accent-cyan);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+* {
+  border-color: var(--surface-border);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+section[id],
+main > div[id] {
+  scroll-margin-top: 96px;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent-blue) 35%, transparent);
+  color: var(--foreground);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Ambient grid background */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* Animated mesh gradient for hero */
+.mesh-gradient {
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 20%, color-mix(in srgb, var(--accent-blue) 22%, transparent), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 80% 15%, color-mix(in srgb, var(--accent-violet) 20%, transparent), transparent 60%),
+    radial-gradient(ellipse 55% 55% at 50% 90%, color-mix(in srgb, var(--accent-cyan) 14%, transparent), transparent 65%);
+  animation: mesh-drift 22s ease-in-out infinite alternate;
+  filter: blur(0px);
+}
+
+@keyframes mesh-drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-2%, 2%, 0) scale(1.05); }
+  100% { transform: translate3d(2%, -1%, 0) scale(1.02); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mesh-gradient {
+    animation: none;
+  }
+}
+
+.glass {
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--surface-border);
+}
+
+.text-gradient {
+  background: linear-gradient(100deg, var(--accent-blue), var(--accent-violet) 55%, var(--accent-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+.flow-edge {
+  stroke-dasharray: 4 6;
+  animation: flow-dash 1.6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .flow-edge {
+    animation: none;
+  }
+}
