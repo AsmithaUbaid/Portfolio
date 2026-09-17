@@ -124,6 +124,15 @@ body {
   }
 }
 
+.photo-glow {
+  background:
+    radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--accent-blue) 55%, transparent), transparent 60%),
+    radial-gradient(circle at 75% 80%, color-mix(in srgb, var(--accent-violet) 50%, transparent), transparent 60%),
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--accent-cyan) 35%, transparent), transparent 65%);
+  filter: blur(32px);
+  animation: mesh-drift 18s ease-in-out infinite alternate;
+}
+
 .glass {
   background: color-mix(in srgb, var(--surface) 70%, transparent);
   backdrop-filter: blur(16px);

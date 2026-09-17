@@ -2,15 +2,19 @@ import { GraduationCap, Award, BadgeCheck, BookOpen } from "lucide-react";
 import { education, publications, awards, certifications, profile } from "@/lib/data";
 import { SectionHeader } from "./SectionHeader";
 import { Reveal, Stagger, StaggerItem } from "./Reveal";
+import { ProfilePhoto } from "./ProfilePhoto";
 
 export function About() {
   return (
     <section id="about" className="relative mx-auto max-w-6xl px-4 py-28 sm:px-6">
-      <SectionHeader
-        eyebrow="About"
-        title="Grounded in systems engineering, specializing in applied AI."
-        description={profile.summary}
-      />
+      <div className="flex flex-col-reverse items-start gap-6 sm:flex-row sm:items-center sm:gap-8">
+        <SectionHeader
+          eyebrow="About"
+          title="Grounded in systems engineering, specializing in applied AI."
+          description={profile.summary}
+        />
+        <ProfilePhoto src={profile.photo} alt={profile.name} variant="compact" />
+      </div>
 
       <div className="mt-14 grid gap-10 lg:grid-cols-2">
         <Reveal>

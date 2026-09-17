@@ -15,6 +15,7 @@ export const profile = {
   summary:
     "Software engineer with 3+ years at Palo Alto Networks, progressing from Software Engineer Intern to Staff Software Engineer, building distributed backend services and cloud infrastructure across GCP, AWS, and Kubernetes. Pursuing an MSc in Enterprise Artificial Intelligence at NTU, with hands-on work in LLM applications, RAG, agentic workflows, multimodal document understanding, and evaluation of accuracy, latency, cost, and failure modes.",
   resumeFile: "/Asmitha_U_AI_Engineer_Resume.pdf",
+  photo: "/headshot.jpg",
   availability: "Open to Applied AI / AI Engineering roles",
 };
 
