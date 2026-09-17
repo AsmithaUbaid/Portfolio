@@ -12,14 +12,12 @@ import { ContactCTA } from "@/components/ContactCTA";
 import { Footer } from "@/components/Footer";
 import { CursorSpotlight } from "@/components/CursorSpotlight";
 import { RecruiterView } from "@/components/RecruiterView";
-import { ScrollProgress } from "@/components/ScrollProgress";
 
 export default function Home() {
   const { viewMode } = useSite();
 
   return (
     <>
-      <ScrollProgress />
       <CursorSpotlight />
       <Navigation />
       <main id="main">

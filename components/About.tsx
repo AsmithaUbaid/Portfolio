@@ -22,9 +22,9 @@ export function About() {
             <GraduationCap size={14} />
             Education
           </div>
-          <div className="mt-4 divide-y divide-surface-border border-t border-surface-border">
+          <div className="mt-4 space-y-4">
             {education.map((e) => (
-              <div key={e.school} className="py-4">
+              <div key={e.school} className="glass rounded-2xl p-5">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <h3 className="text-sm font-semibold text-foreground">{e.degree}</h3>
                   <span className="text-xs text-foreground-subtle">
@@ -41,9 +41,12 @@ export function About() {
             <BadgeCheck size={14} />
             Certifications
           </div>
-          <div className="mt-4 divide-y divide-surface-border border-t border-surface-border">
+          <div className="mt-4 space-y-3">
             {certifications.map((c) => (
-              <div key={c.title} className="flex items-center justify-between py-3.5">
+              <div
+                key={c.title}
+                className="flex items-center justify-between rounded-2xl border border-surface-border px-5 py-4"
+              >
                 <span className="text-sm font-medium text-foreground">{c.title}</span>
                 <span className="text-xs text-foreground-subtle">{c.period}</span>
               </div>
@@ -56,13 +59,15 @@ export function About() {
             <BookOpen size={14} />
             Publications
           </div>
-          <Stagger className="mt-4 divide-y divide-surface-border border-t border-surface-border">
+          <Stagger className="mt-4 space-y-3">
             {publications.map((p) => (
               <StaggerItem key={p.title}>
-                <div className="py-4">
+                <div className="glass rounded-2xl p-5">
                   <p className="text-sm font-medium leading-snug text-foreground">{p.title}</p>
                   <div className="mt-2 flex flex-wrap items-center gap-2">
-                    <span className="text-xs text-foreground-subtle">{p.venue}</span>
+                    <span className="rounded-full border border-surface-border px-2.5 py-0.5 text-xs text-foreground-muted">
+                      {p.venue}
+                    </span>
                     {p.note && (
                       <span className="rounded-full bg-accent-cyan/15 px-2.5 py-0.5 text-xs font-medium text-accent-cyan">
                         {p.note}
@@ -78,9 +83,9 @@ export function About() {
             <Award size={14} />
             Awards
           </div>
-          <div className="mt-4 divide-y divide-surface-border border-t border-surface-border">
+          <div className="mt-4 space-y-3">
             {awards.map((a) => (
-              <div key={a.title} className="py-4">
+              <div key={a.title} className="rounded-2xl border border-surface-border px-5 py-4">
                 <p className="text-sm font-medium text-foreground">{a.title}</p>
                 <p className="mt-1 text-sm leading-relaxed text-foreground-muted">{a.venue}</p>
               </div>

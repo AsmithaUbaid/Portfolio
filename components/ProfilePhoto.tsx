@@ -53,7 +53,7 @@ export function ProfilePhoto({
     >
       <div
         aria-hidden
-        className={`photo-glow absolute opacity-35 ${isHero ? "-inset-5 rounded-[2.5rem]" : "-inset-3 rounded-full"}`}
+        className={`photo-glow absolute opacity-60 ${isHero ? "-inset-5 rounded-[2.5rem]" : "-inset-3 rounded-full"}`}
       />
       <div
         ref={ref}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useCallback, useEffect, useRef } from "react";
+import { useMemo, useState, useCallback } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -12,21 +12,19 @@ import ReactFlow, {
   type NodeProps,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import type { DiagramEdge, DiagramNode } from "@/lib/data";
 
 const COL_WIDTH = 210;
 const ROW_HEIGHT = 130;
 
-function FlowNode({ data, selected }: NodeProps<{ label: string; sublabel: string; pulsing: boolean }>) {
+function FlowNode({ data, selected }: NodeProps<{ label: string; sublabel: string }>) {
   return (
     <div
-      className={`w-[172px] rounded-xl border px-3.5 py-3 text-left transition-all duration-300 ${
+      className={`w-[172px] rounded-xl border px-3.5 py-3 text-left shadow-md transition-all duration-200 ${
         selected
-          ? "border-accent-blue bg-accent-blue/10"
-          : data.pulsing
-            ? "border-accent-cyan/70 bg-accent-cyan/5"
-            : "border-surface-border/70 bg-surface/60 hover:border-accent-blue/50"
+          ? "border-accent-blue bg-accent-blue/10 shadow-accent-blue/20"
+          : "border-surface-border bg-surface/90 hover:border-accent-blue/60"
       }`}
     >
       <Handle type="target" position={Position.Left} className="!bg-accent-blue !border-none !h-2 !w-2" />
@@ -51,25 +49,6 @@ export function ArchitectureDiagram({
   edges: DiagramEdge[];
 }) {
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [pulseIndex, setPulseIndex] = useState(0);
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(wrapRef, { margin: "-10% 0px -10% 0px" });
-
-  const orderedIds = useMemo(
-    () => [...dataNodes].sort((a, b) => a.col - b.col || a.row - b.row).map((n) => n.id),
-    [dataNodes]
-  );
-
-  useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion || !inView) return;
-    const id = setInterval(() => {
-      setPulseIndex((i) => (i + 1) % (orderedIds.length + 2));
-    }, 650);
-    return () => clearInterval(id);
-  }, [orderedIds.length, inView]);
-
-  const pulsingNodeId = orderedIds[pulseIndex];
 
   const nodes: Node[] = useMemo(
     () =>
@@ -77,11 +56,11 @@ export function ArchitectureDiagram({
         id: n.id,
         type: "flow",
         position: { x: n.col * COL_WIDTH, y: n.row * ROW_HEIGHT },
-        data: { label: n.label, sublabel: n.sublabel, pulsing: n.id === pulsingNodeId },
+        data: { label: n.label, sublabel: n.sublabel },
         selected: n.id === activeId,
         draggable: false,
       })),
-    [dataNodes, activeId, pulsingNodeId]
+    [dataNodes, activeId]
   );
 
   const edges: Edge[] = useMemo(
@@ -92,8 +71,8 @@ export function ArchitectureDiagram({
         target: e.target,
         animated: false,
         className: "flow-edge",
-        style: { stroke: "var(--accent-blue)", strokeWidth: 1.5, opacity: 0.6 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: "var(--accent-blue)", width: 14, height: 14 },
+        style: { stroke: "var(--accent-blue)", strokeWidth: 1.5 },
+        markerEnd: { type: MarkerType.ArrowClosed, color: "var(--accent-blue)", width: 16, height: 16 },
       })),
     [dataEdges]
   );
@@ -105,8 +84,8 @@ export function ArchitectureDiagram({
   const active = dataNodes.find((n) => n.id === activeId);
 
   return (
-    <div ref={wrapRef} className="flex flex-col gap-4 lg:flex-row lg:gap-6">
-      <div className="h-[280px] w-full overflow-hidden rounded-2xl border border-surface-border/60 bg-background-elevated/40 sm:h-[320px] lg:flex-1">
+    <div className="flex flex-col gap-4">
+      <div className="h-[300px] w-full overflow-hidden rounded-2xl border border-surface-border bg-background-elevated sm:h-[340px]">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -130,36 +109,34 @@ export function ArchitectureDiagram({
         </ReactFlow>
       </div>
 
-      <div className="lg:w-64 lg:shrink-0">
-        <AnimatePresence mode="wait">
-          {active ? (
-            <motion.div
-              key={active.id}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
-              className="border-l-2 border-accent-blue py-1 pl-4"
-            >
-              <div className="text-xs font-medium uppercase tracking-wide text-accent-cyan">
-                {active.sublabel}
-              </div>
-              <div className="mt-0.5 text-sm font-semibold text-foreground">{active.label}</div>
-              <p className="mt-1.5 text-sm leading-relaxed text-foreground-muted">{active.detail}</p>
-            </motion.div>
-          ) : (
-            <motion.p
-              key="hint"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="border-l-2 border-surface-border py-1 pl-4 text-sm text-foreground-subtle"
-            >
-              Click any node to see what it does. The highlighted node shows the request moving through the system.
-            </motion.p>
-          )}
-        </AnimatePresence>
-      </div>
+      <AnimatePresence mode="wait">
+        {active ? (
+          <motion.div
+            key={active.id}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="glass rounded-xl px-4 py-3.5"
+          >
+            <div className="text-xs font-medium uppercase tracking-wide text-accent-cyan">
+              {active.sublabel}
+            </div>
+            <div className="mt-0.5 text-sm font-semibold text-foreground">{active.label}</div>
+            <p className="mt-1.5 text-sm leading-relaxed text-foreground-muted">{active.detail}</p>
+          </motion.div>
+        ) : (
+          <motion.p
+            key="hint"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="px-1 text-sm text-foreground-subtle"
+          >
+            Click any node above to see what it does.
+          </motion.p>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
