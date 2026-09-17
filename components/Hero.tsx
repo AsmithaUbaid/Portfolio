@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Linkedin, Mail, MapPin } from "lucide-react";
 import { profile, heroFacts } from "@/lib/data";
 import { MetricCard } from "./MetricCard";
@@ -46,13 +46,21 @@ function RotatingKeyword() {
 }
 
 export function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const yBackground = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "18%"]);
+
   return (
     <section
+      ref={sectionRef}
       id="home"
       className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden pt-28 pb-16"
     >
-      <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_80%_60%_at_50%_10%,#000_40%,transparent_100%)]" />
-      <div className="mesh-gradient absolute inset-0" aria-hidden />
+      <motion.div style={{ y: yBackground }} className="absolute inset-0">
+        <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_80%_60%_at_50%_10%,#000_40%,transparent_100%)]" />
+        <div className="mesh-gradient absolute inset-0" aria-hidden />
+      </motion.div>
 
       <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6">
         <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">

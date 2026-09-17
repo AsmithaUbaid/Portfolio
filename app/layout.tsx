@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { SiteProvider } from "@/lib/providers";
 import { profile } from "@/lib/data";
+import { CustomCursor } from "@/components/CustomCursor";
+import { TabTitle } from "@/components/TabTitle";
 import "./globals.css";
 
 const inter = Inter({
@@ -55,6 +57,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
+        <div className="grain-overlay" aria-hidden />
+        <TabTitle />
+        <CustomCursor />
         <SiteProvider>{children}</SiteProvider>
       </body>
     </html>
