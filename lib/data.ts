@@ -246,53 +246,65 @@ export const projects: Project[] = [
     featured: true,
   },
   {
-    slug: "log-anomaly-detection",
-    name: "Anomaly Detection for System Logs",
+    slug: "saas-licence-governance",
+    name: "SaaS Licence Optimisation & Governance",
     oneLiner:
-      "Comparing classical and deep models for real-time anomaly detection on operational log data.",
+      "An agent-assisted workflow that reclaims and reallocates unused SaaS licences before the business buys more seats.",
     problem:
-      "Operational systems generate high-volume log data where failures and anomalies need to be caught in real time — well before they surface as customer-impacting incidents.",
+      "Enterprises accumulate unused SaaS seats as people leave, change roles, or stop needing a tool — while another employee is often waiting on the same access. The problem isn't just idle licences; it's fragmented evidence across spreadsheets, mailboxes, and admin portals, slow approval cycles, avoidable purchases, and a weak audit trail for every access change.",
     whyAI:
-      "Anomalies in log data don't follow fixed rules — patterns shift over time and across systems — so the project compared multiple model families (sequence-aware and non-sequence-aware) to understand which approach fits which kind of anomaly, rather than assuming one model architecture is sufficient.",
+      "Deterministic policy handles the structured facts — employee status, days inactive, role requirements, valid exclusions. An agent is used only where language or context is genuinely ambiguous, such as interpreting a free-text employee or manager reply or reconciling conflicting justifications — and even then it only recommends. It has no authority to revoke, downgrade, or assign a licence; deterministic policy and human approval gate every irreversible action.",
     contribution:
-      "Applied and compared ANN, CNN, RNN, Isolation Forest, and Decision Tree models on operational log data, evaluating each for real-time anomaly detection and system monitoring.",
+      "Designed and built the end-to-end workflow in UiPath Studio Web: ingesting licence and usage data from three differently-structured sources (a shared-folder spreadsheet, a mailbox attachment, and web portal activity) into one canonical state; a constrained decision agent with confidence gating and prompt-injection defenses for ambiguous cases; stateful email approval routing with reminders and exclusion handling; verified UI actions against a mock admin portal; and reallocation-before-renewal matching against an approved demand queue, with full audit logging throughout.",
     evaluation: [
-      { label: "Models compared", value: "5 (ANN, CNN, RNN, Isolation Forest, Decision Tree)" },
-      { label: "Use case", value: "Real-time monitoring" },
+      { label: "Evaluation structure", value: "L1 schema/policy checks + L2 judgement review" },
+      { label: "Adversarial test cases", value: "7 prompt-injection & ambiguous-reply scenarios" },
+      { label: "Modeled admin-time reduction", value: "~84% (projected, not yet measured)" },
     ],
     tradeoffs: [
       {
-        decision: "Multiple model families over a single default",
+        decision: "Agent recommends, never executes",
         reasoning:
-          "Sequence models (RNN) capture temporal patterns that tree-based methods (Isolation Forest, Decision Trees) miss, while classical methods offer faster inference — comparing both surfaces the right trade-off for real-time constraints.",
+          "The agent outputs a recommendation, confidence score, and evidence — nothing more. Deterministic policy and human approval gate every revoke, downgrade, or assignment, the same gated-autonomy pattern used across my other AI systems.",
       },
       {
-        decision: "Real-time monitoring as the design constraint",
+        decision: "Check demand before flagging for contract reduction",
         reasoning:
-          "Detection latency matters as much as detection quality for operational monitoring, which shaped model selection toward approaches that can run inline with log ingestion.",
+          "A reclaimed licence is matched against an approved request queue first, so existing paid capacity can satisfy new demand — turning a recovered seat into an avoided purchase instead of defaulting straight to a cancellation.",
+      },
+      {
+        decision: "UI automation as a last-mile fallback, not the primary path",
+        reasoning:
+          "Structured sources are used wherever available; UI automation exists specifically for admin systems that don't expose a clean API or connector, which is how most real SaaS admin consoles actually behave.",
+      },
+      {
+        decision: "Persisted state over an always-on process",
+        reasoning:
+          "Approvals can take days to come back, so workflow state is persisted and each run resumes only the eligible transition — instead of keeping a process alive and idle while waiting on a human reply.",
       },
     ],
     result:
-      "A comparative evaluation of classical and deep anomaly-detection approaches on real operational log data, informing which model family fits real-time system-monitoring constraints.",
+      "A working prototype covering the full reclaim → approve → execute → verify → reallocate → audit loop, with a constrained-agent evaluation harness (schema validity, policy consistency, prompt-injection resistance) and a transparent ROI model projecting roughly 84% lower manual licence-admin effort versus the baseline manual process.",
     diagram: {
       nodes: [
-        { id: "logs", label: "System Logs", sublabel: "Input", detail: "Streaming operational log data from production systems.", col: 0, row: 0 },
-        { id: "features", label: "Feature Extraction", sublabel: "Processing", detail: "Log data transformed into feature representations for downstream models.", col: 1, row: 0 },
-        { id: "classical", label: "Isolation Forest / Decision Tree", sublabel: "Classical Models", detail: "Fast, non-sequence-aware anomaly scoring for low-latency detection.", col: 2, row: 0 },
-        { id: "deep", label: "ANN / CNN / RNN", sublabel: "Deep Models", detail: "Sequence- and pattern-aware models that capture temporal anomaly signatures.", col: 2, row: 1 },
-        { id: "compare", label: "Comparative Evaluation", sublabel: "Evaluation", detail: "Models compared for detection quality vs. real-time latency trade-offs.", col: 3, row: 0.5 },
-        { id: "monitor", label: "Monitoring Alert", sublabel: "Output", detail: "Flagged anomalies surfaced for system monitoring and response.", col: 4, row: 0.5 },
+        { id: "sources", label: "Licence Sources", sublabel: "Input", detail: "Three differently-structured sources — shared-folder spreadsheet, mailbox attachment, and web portal activity — normalized into one record.", col: 0, row: 0 },
+        { id: "canonical", label: "Canonical State", sublabel: "Data", detail: "Enriches each licence with employee status, role requirement, cost, exclusions, and pending demand into one persisted workflow state.", col: 1, row: 0 },
+        { id: "policy", label: "Policy Screening", sublabel: "Deterministic", detail: "Structured rules decide KEEP, DOWNGRADE, or RECLAIM from the facts — only ambiguous cases move on to the agent.", col: 2, row: 0 },
+        { id: "agent", label: "Decision Agent", sublabel: "Model", detail: "Invoked only for ambiguous language or context, with confidence gating and prompt-injection defenses. Never executes an action itself.", col: 3, row: 0 },
+        { id: "approval", label: "Email Approval", sublabel: "Guardrail", detail: "Routes the recommendation to employee and manager for accountable sign-off before anything irreversible happens.", col: 4, row: 0 },
+        { id: "action", label: "Verified UI Action", sublabel: "Execution", detail: "Revoke, downgrade, or assign on the admin portal — then re-reads the portal state to confirm the change actually took effect.", col: 5, row: 0 },
+        { id: "audit", label: "Reallocation & Audit", sublabel: "Output", detail: "Matches a reclaimed seat against approved demand before flagging it for contract reduction, and logs every step for a reconstructable trail.", col: 6, row: 0 },
       ],
       edges: [
-        { source: "logs", target: "features" },
-        { source: "features", target: "classical" },
-        { source: "features", target: "deep" },
-        { source: "classical", target: "compare" },
-        { source: "deep", target: "compare" },
-        { source: "compare", target: "monitor" },
+        { source: "sources", target: "canonical" },
+        { source: "canonical", target: "policy" },
+        { source: "policy", target: "agent" },
+        { source: "agent", target: "approval" },
+        { source: "approval", target: "action" },
+        { source: "action", target: "audit" },
       ],
     },
-    tags: ["Anomaly Detection", "RNN", "CNN", "Isolation Forest", "Monitoring"],
+    tags: ["UiPath", "Agentic Automation", "RPA", "Email Automation", "UI Automation", "Governance"],
     featured: false,
   },
 ];
